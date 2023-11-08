@@ -1,7 +1,6 @@
+@icon("res://admob-lib/icon.png")
 extends Node
-
-class_name AdMob, "res://admob-lib/icon.png"
-
+class_name AdMob
 # signals
 signal banner_loaded
 signal banner_failed_to_load(error_code)
@@ -30,21 +29,51 @@ signal consent_app_can_request_ad(consent_status)
 
 
 # properties
-export var is_real:bool setget is_real_set
-export var banner_on_top:bool = true
+@export var is_real:bool = true:
+	get: 
+		return is_real
+	set(value):
+		is_real_set(value)
+
+@export var banner_on_top:bool = true
+
 # SMART_BANNER is deprecated
-export(String, "ADAPTIVE_BANNER", "SMART_BANNER", "BANNER", "LARGE_BANNER", "MEDIUM_RECTANGLE", "FULL_BANNER", "LEADERBOARD") var banner_size = "ADAPTIVE_BANNER"
-export var banner_id:String
-export var interstitial_id:String
-export var rewarded_id:String
-export var rewarded_interstitial_id:String
-export var child_directed:bool = false setget child_directed_set
-export var is_personalized:bool = true setget is_personalized_set
-export(String, "G", "PG", "T", "MA") var max_ad_content_rate = "G" setget max_ad_content_rate_set
+
+@export_enum("ADAPTIVE_BANNER", "SMART_BANNER", "BANNER", "LARGE_BANNER", "MEDIUM_RECTANGLE", "FULL_BANNER", "LEADERBOARD") var banner_size:String = "ADAPTIVE_BANNER"
+@export var banner_id:String
+@export var interstitial_id:String
+@export var rewarded_id:String
+@export var rewarded_interstitial_id:String
+@export var child_directed:bool = false:
+	get:
+		return child_directed
+	set(value):
+		child_directed_set(value)
+		
+@export var is_personalized:bool = true:
+	get:
+		return is_personalized
+	set(value):
+		is_personalized_set(value)
+		
+@export_enum("G", "PG", "T", "MA") var max_ad_content_rate:String = "G" :
+	set(value):
+		max_ad_content_rate_set(value)
+	get:
+		return max_ad_content_rate
 
 # Testing consent flag
-export var ads_using_consent:bool setget ads_using_consent
-export var testing_consent:bool setget testing_consent_set
+@export var ads_using_consent:bool = true:
+	get:
+		return ads_using_consent
+	set(value):
+		ads_using_consent_set(value)
+
+@export var testing_consent:bool = false:
+	get:
+		return testing_consent
+	set(value):
+		testing_consent_set(value)
 
 
 # "private" properties
@@ -59,35 +88,35 @@ func _enter_tree():
 		print("AdMob Java Singleton not found. This plugin will only work on Android")
 
 # setters
-func is_real_set(new_val) -> void:
-	is_real = new_val
+func is_real_set(value) -> void:
+	is_real = value
 # warning-ignore:return_value_discarded
 	init()
 
-func testing_consent_set(new_val) -> void:
-	testing_consent = new_val
+func testing_consent_set(value) -> void:
+	testing_consent = value
 
-func ads_using_consent(new_val) -> void:
-	ads_using_consent = new_val
+func ads_using_consent_set(value) -> void:
+	ads_using_consent = value
 
-func child_directed_set(new_val) -> void:
-	child_directed = new_val
+func child_directed_set(value) -> void:
+	child_directed = value
 # warning-ignore:return_value_discarded
 	init()
 
-func is_personalized_set(new_val) -> void:
-	is_personalized = new_val
+func is_personalized_set(value) -> void:
+	is_personalized = value
 # warning-ignore:return_value_discarded
 	init()
 
-func max_ad_content_rate_set(new_val) -> void:
-	if new_val != "G" and new_val != "PG" \
-		and new_val != "T" and new_val != "MA":
+func max_ad_content_rate_set(value) -> void:
+	if value != "G" and value != "PG" \
+		and value != "T" and value != "MA":
 
 		max_ad_content_rate = "G"
 		print("Invalid max_ad_content_rate, using 'G'")
 	else:
-		max_ad_content_rate = new_val
+		max_ad_content_rate = value
 	init()
 
 
@@ -97,7 +126,7 @@ func init() -> bool:
 		_admob_singleton = Engine.get_singleton("GodotAdMob")
 
 		# check if one signal is already connected
-		if not _admob_singleton.is_connected("on_admob_ad_loaded", self, "_on_admob_ad_loaded"):
+		if not _admob_singleton.is_connected("on_admob_ad_loaded", Callable(self, "_on_admob_ad_loaded")):
 			connect_signals()
 
 		_admob_singleton.initWithContentRating(
@@ -111,30 +140,30 @@ func init() -> bool:
 
 # connect the AdMob Java signals
 func connect_signals() -> void:
-	_admob_singleton.connect("on_admob_ad_loaded", self, "_on_admob_ad_loaded")
-	_admob_singleton.connect("on_admob_banner_failed_to_load", self, "_on_admob_banner_failed_to_load")
-	_admob_singleton.connect("on_interstitial_failed_to_load", self, "_on_interstitial_failed_to_load")
-	_admob_singleton.connect("on_interstitial_opened", self, "_on_interstitial_opened")
-	_admob_singleton.connect("on_interstitial_loaded", self, "_on_interstitial_loaded")
-	_admob_singleton.connect("on_interstitial_close", self, "_on_interstitial_close")
-	_admob_singleton.connect("on_interstitial_clicked", self, "_on_interstitial_clicked")
-	_admob_singleton.connect("on_interstitial_impression", self, "_on_interstitial_impression")
-	_admob_singleton.connect("on_rewarded_video_ad_loaded", self, "_on_rewarded_video_ad_loaded")
-	_admob_singleton.connect("on_rewarded_video_ad_opened", self, "_on_rewarded_video_ad_opened")
-	_admob_singleton.connect("on_rewarded_video_ad_closed", self, "_on_rewarded_video_ad_closed")
-	_admob_singleton.connect("on_rewarded_video_ad_failed_to_load", self, "_on_rewarded_video_ad_failed_to_load")
-	_admob_singleton.connect("on_rewarded_interstitial_ad_loaded", self, "_on_rewarded_interstitial_ad_loaded")
-	_admob_singleton.connect("on_rewarded_interstitial_ad_opened", self, "_on_rewarded_interstitial_ad_opened")
-	_admob_singleton.connect("on_rewarded_interstitial_ad_closed", self, "_on_rewarded_interstitial_ad_closed")
-	_admob_singleton.connect("on_rewarded_interstitial_ad_failed_to_load", self, "_on_rewarded_interstitial_ad_failed_to_load")
-	_admob_singleton.connect("on_rewarded_interstitial_ad_failed_to_show", self, "_on_rewarded_interstitial_ad_failed_to_show")
-	_admob_singleton.connect("on_rewarded", self, "_on_rewarded")
-	_admob_singleton.connect("on_rewarded_clicked", self, "_on_rewarded_clicked")
-	_admob_singleton.connect("on_rewarded_impression", self, "_on_rewarded_impression")
+	_admob_singleton.connect("on_admob_ad_loaded", Callable(self, "_on_admob_ad_loaded"))
+	_admob_singleton.connect("on_admob_banner_failed_to_load", Callable(self, "_on_admob_banner_failed_to_load"))
+	_admob_singleton.connect("on_interstitial_failed_to_load", Callable(self, "_on_interstitial_failed_to_load"))
+	_admob_singleton.connect("on_interstitial_opened", Callable(self, "_on_interstitial_opened"))
+	_admob_singleton.connect("on_interstitial_loaded", Callable(self, "_on_interstitial_loaded"))
+	_admob_singleton.connect("on_interstitial_close", Callable(self, "_on_interstitial_close"))
+	_admob_singleton.connect("on_interstitial_clicked", Callable(self, "_on_interstitial_clicked"))
+	_admob_singleton.connect("on_interstitial_impression", Callable(self, "_on_interstitial_impression"))
+	_admob_singleton.connect("on_rewarded_video_ad_loaded", Callable(self, "_on_rewarded_video_ad_loaded"))
+	_admob_singleton.connect("on_rewarded_video_ad_opened", Callable(self, "_on_rewarded_video_ad_opened"))
+	_admob_singleton.connect("on_rewarded_video_ad_closed", Callable(self, "_on_rewarded_video_ad_closed"))
+	_admob_singleton.connect("on_rewarded_video_ad_failed_to_load", Callable(self, "_on_rewarded_video_ad_failed_to_load"))
+	_admob_singleton.connect("on_rewarded_interstitial_ad_loaded", Callable(self, "_on_rewarded_interstitial_ad_loaded"))
+	_admob_singleton.connect("on_rewarded_interstitial_ad_opened", Callable(self, "_on_rewarded_interstitial_ad_opened"))
+	_admob_singleton.connect("on_rewarded_interstitial_ad_closed", Callable(self, "_on_rewarded_interstitial_ad_closed"))
+	_admob_singleton.connect("on_rewarded_interstitial_ad_failed_to_load", Callable(self, "_on_rewarded_interstitial_ad_failed_to_load"))
+	_admob_singleton.connect("on_rewarded_interstitial_ad_failed_to_show", Callable(self, "_on_rewarded_interstitial_ad_failed_to_show"))
+	_admob_singleton.connect("on_rewarded", Callable(self, "_on_rewarded"))
+	_admob_singleton.connect("on_rewarded_clicked", Callable(self, "_on_rewarded_clicked"))
+	_admob_singleton.connect("on_rewarded_impression", Callable(self, "_on_rewarded_impression"))
 
-	_admob_singleton.connect("on_consent_info_update_success", self, "_on_consent_info_update_success")
-	_admob_singleton.connect("on_consent_info_update_failure", self, "_on_consent_info_update_failure")
-	_admob_singleton.connect("on_app_can_request_ads", self, "_on_app_can_request_ads")
+	_admob_singleton.connect("on_consent_info_update_success", Callable(self, "_on_consent_info_update_success"))
+	_admob_singleton.connect("on_consent_info_update_failure", Callable(self, "_on_consent_info_update_failure"))
+	_admob_singleton.connect("on_app_can_request_ads", Callable(self, "_on_app_can_request_ads"))
 
 # load
 
