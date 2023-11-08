@@ -1,6 +1,6 @@
 # GodotAdMob
 
-This is an Android AdMob plugin for Godot Engine (https://github.com/okamstudio/godot) 3.2.2 or higher. For Godot < 3.2 or iOS support you can use the [old module](https://github.com/kloder-games/godot-admob).
+This is an Android AdMob plugin for Godot Engine (https://github.com/okamstudio/godot) 4.x. It is based on the plugin made by Shin-NiL (https://github.com/Shin-NiL/Godot-Android-Admob-Plugin) for Godot 3.2.2.
 
 Currently, this plugin supports:
 - Banner
@@ -81,9 +81,13 @@ Does this plugin really work? Yes sir! You can see a list of published games [he
 
 Was this project useful for you? Wanna make a donation? These are the options:
 
-### Paypal
+### Donation platforms
 
-My [Paypal donation link](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=3MJE3M4FMJYGN&lc=BR&item_name=Shin%2dNiL%27s%20Github&item_number=Github&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted)
+Go to support the original author through their [Paypal donation link](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=3MJE3M4FMJYGN&lc=BR&item_name=Shin%2dNiL%27s%20Github&item_number=Github&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted)
+
+This is my donation link in case you really wanted to support me (for whatever reason):
+<a href = "https://www.buymeacoffee.com/mircea35"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
 
 ### Brave Browser
 If you're a Brave browser user, please consider donating some BATs ;)
